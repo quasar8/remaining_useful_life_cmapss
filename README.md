@@ -158,8 +158,14 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
 ```
    This opens an interactive fleet-health dashboard: an overview of all 100 engines ranked by predicted RUL, and a per-engine detail view with an RUL gauge and sensor trend charts.
 
-   ## Future Work
+   ## 🚀 Future Work
  - **Additional operating conditions:** Extend the approach to the other C-MAPSS subsets (FD002–FD004), which include multiple operating conditions and fault modes, to test how well it generalizes.
 - **Architecture comparisons:** Benchmark the LSTM against GRUs, 1D-CNNs, and Transformer-based sequence models on the same windows.
 - **Live data integration:** Replace the static test-set dashboard with a pipeline that scores engines as new sensor readings arrive.
+
+- ## 📧 Contact
+- Name : Safak Koclu
+- Email: koclusafak@gmail.com
+- LinkedIn: [My LinkedIn Profile](https://www.linkedin.com/in/safak-koclu/)
+- GitHub: [My GitHub Profile](https://github.com/quasar8)
  
