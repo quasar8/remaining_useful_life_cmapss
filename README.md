@@ -147,4 +147,14 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
  
 ![Streamlit Dashboard — Engine Detail](images/engine_detail.png)
 *The dashboard's Engine Detail page for a single engine: an RUL gauge shows how many cycles are left, and a sensor selector lets an engineer pick any of the 14 sensors and observe how its readings change over that engine's history — with an automatic alert flagging sensors that are trending in a concerning direction.* 
+
+## How to Use This Project
+1. **Data:** The FD001 train/test/RUL files are already included in the `/data` folder of this repo.
+2. **Main Analysis:** Open [`FD001_RUL_Prediction.ipynb`](FD001_RUL_Prediction.ipynb) in Jupyter Notebook (or JupyterLab) and run all cells top to bottom.
+3. **Run the Code:** Running the notebook end to end reproduces preprocessing, training, evaluation, and — in the final section — writes `app.py` and the `artifacts/` folder needed for the dashboard.
+4. **Launch the Dashboard:** From a terminal in the project folder, run:
+```bash
+   streamlit run app.py
+```
+   This opens an interactive fleet-health dashboard: an overview of all 100 engines ranked by predicted RUL, and a per-engine detail view with an RUL gauge and sensor trend charts.
  
