@@ -94,6 +94,7 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
 
 
 ## 📁 Project Structure
+
  
 ```
 ├── FD001_RUL_Prediction.ipynb    # Main analysis notebook — see pipeline below
@@ -109,6 +110,17 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
 │   ├── fleet_summary.csv         # Per-engine predicted vs. true RUL, for the dashboard
 │   └── test_sensor_history.csv   # Per-engine sensor history, for the dashboard
 ├── images/                       # Plots embedded in this README
+│   ├── sensor_correlation_with_rul.png
+│   ├── sliding_window_diagram.png
+│   ├── justification_rul_125.png
+│   ├── degradation_path.png
+│   ├── true_vs_predicted_rul.png
+│   ├── fleet_overview.png
+│   └── engine_detail.png
 └── README.md
 ```
+## 📈 Visualizations
+
+18. Test Set Evaluation
+19. Streamlit Dashboard
  
