@@ -83,7 +83,7 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
 - **Business impact:** an average error of roughly 14 cycles is a tight enough margin to flag an engine for maintenance well before it becomes an unplanned failure, rather than relying on fixed-interval servicing.
 
 
-##🛠️ Technologies Used
+## 🛠️ Technologies Used
  
 - **Programming:** Python
 - **Data & ML:** pandas, numpy, scikit-learn (`GroupShuffleSplit`, `RobustScaler`), joblib
