@@ -47,13 +47,18 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
   - **7 constant/dead sensors** — `op_setting_3`, `sensor_1`, `sensor_5`, `sensor_10`, `sensor_16`, `sensor_18`, `sensor_19` — and **3 near-zero-correlation features** (`sensor_6`, `op_setting_1`, `op_setting_2`) were dropped, leaving **14 usable features**.
   - `sensor_9` and `sensor_14` are heavily outlier-prone, so features were scaled with **`RobustScaler`** (median/IQR-based) instead of a standard scaler.
   - The RUL target was **capped at 125 cycles** (piecewise-linear target) — EDA showed sensor readings stay essentially flat while an engine has more than ~125 cycles left, so capping lets the model focus on the region where degradation is actually visible.
-   - **Sliding windows:** the LSTM needs to see *change* over time, not a single cycle, so each engine's history was cut into overlapping 30-cycle windows, sliding forward one cycle at a time. Each window's target (RUL) is taken at that window's **last cycle** — i.e. "given the last 30 cycles of readings, what is the RUL right now?" Doing this across all 80 training-split engines produced **14,256 training windows** (`X_train` shape `(14256, 30, 14)`, `y_train` shape `(14256,)`).
- 
-  ![Sliding Window Diagram](images/sliding_window_diagram.png)
+  - **Sliding windows:** the LSTM needs to see *change* over time, not a single cycle, so each engine's history was cut into overlapping 30-cycle windows, sliding forward one cycle at a time. Each window's target (RUL) is taken at that window's **last cycle** — i.e. "given the last 30 cycles of readings, what is the RUL right now?" Doing this across all 80 training-split engines produced **14,256 training windows** (`X_train` shape `(14256, 30, 14)`, `y_train` shape `(14256,)`).
     
-    *How the sliding window works: a 30-cycle window slides forward one cycle at a time across an engine's history, with the RUL target read at each window's last cycle. Repeated across all engines, this is what turns ~20,631 raw training rows into 14,256 training sequences.*
-  - **Batching (PyTorch `DataLoader`):** windows are then grouped into batches of **64** before being fed to the LSTM — `X_batch` shape `torch.Size([64, 30, 14])`, `y_batch` shape `torch.Size([64])`. Training on one window at a time would be slow and give the model a noisy, unstable gradient signal; batching 64 windows together lets PyTorch process them as a single tensor operation (much faster, especially on a GPU) and averages the gradient over 64 examples per update, which makes training smoother and more stable.
+    <img src="images/sliding_window_diagram.png" alt="Sliding Window Diagram" width="560">
+    
+    *How the sliding window works: a 30-cycle window slides forward one cycle at a time across an engine's history, with the RUL target read at each window's last cycle. Repeated across all engines, this is what turns raw per-cycle rows into 14,256 training sequences.*
+  - **Batching (PyTorch `DataLoader`):** the 14,256 windows are then grouped into random, **shuffled** batches of **64** before being fed to the LSTM — `X_batch` shape `torch.Size([64, 30, 14])`, `y_batch` shape `torch.Size([64])`, where **64** is the number of windows in that batch, **30** is the number of cycles per window, and **14** is the number of sensor/setting features per cycle.
+
+     Training on one window at a time would be slow and give the model a noisy, unstable gradient signal; batching 64 windows together lets PyTorch process them as a single tensor operation (much faster, especially on a GPU) and averages the gradient over 64 examples per update, which makes training smoother and more stable.
+     The batches are shuffled every epoch (`shuffle=True`) rather than fed in the fixed engine-by-engine order they were created in — this stops the model from learning a spurious order/position pattern and keeps each batch a random, representative mix of engines and degradation stages.
  
+
+
 ## 🚀 Key Findings & Results
  
 - **Test RMSE: 14.16 cycles** (MSE 200.57) on 100 held-out engines never used in training or hyperparameter tuning — predictions are typically off by about 14 cycles from the true remaining life.
