@@ -81,3 +81,13 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
 - **Test RMSE: 14.16 cycles** (MSE 200.57) on 100 held-out engines never used in training or hyperparameter tuning — predictions are typically off by about 14 cycles from the true remaining life.
 - The model is **most accurate when an engine is close to failure** (true RUL under ~60 cycles), which is exactly the regime where a maintenance decision actually matters. The largest errors occur in the mid-range (RUL ≈ 60–120), where degradation signal is still gradual and harder to pinpoint.
 - **Business impact:** an average error of roughly 14 cycles is a tight enough margin to flag an engine for maintenance well before it becomes an unplanned failure, rather than relying on fixed-interval servicing.
+
+
+##🛠️ Technologies Used
+ 
+- **Programming:** Python
+- **Data & ML:** pandas, numpy, scikit-learn (`GroupShuffleSplit`, `RobustScaler`), joblib
+- **Deep Learning:** PyTorch (custom `Dataset`/`DataLoader`, `nn.LSTM`)
+- **Visualization:** matplotlib, seaborn
+- **Dashboard:** Streamlit, Plotly
+- **Environment:** Google Colab / Jupyter Notebook
