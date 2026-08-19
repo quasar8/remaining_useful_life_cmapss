@@ -61,9 +61,9 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
 
 ## 🚀 Key Findings & Results
  
-- **Test RMSE: 14.16 cycles** (MSE 200.57) on 100 held-out engines never used in training or hyperparameter tuning — predictions are typically off by about 14 cycles from the true remaining life.
-- The model is **most accurate when an engine is close to failure** (true RUL under ~60 cycles), which is exactly the regime where a maintenance decision actually matters. The largest errors occur in the mid-range (RUL ≈ 60–120), where degradation signal is still gradual and harder to pinpoint.
 - Sensor correlation analysis identified **`sensor_11`, `sensor_4`, `sensor_12`, and `sensor_7`** as the strongest degradation indicators (correlation with RUL between 0.66 and 0.70).
+  
+  <p align="center"><img src="images/sensor_correlation_with_rul.png" alt="Sensor Correlation with RUL" width="420"></p>
 - The winning architecture — a single-layer LSTM with `hidden_size=64` and learning rate `0.001` — was chosen via grid search.
 <div align="center">
 <table>
@@ -76,4 +76,8 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
 </table>
 </div>
 
+
+- **Model training:** the winning configuration (`hidden_size=64`, `num_layers=1`, `lr=0.001`) was then trained for up to **100 epochs** — one epoch means the model has worked through all 14,256 training windows exactly once. To avoid overfitting, training used **early stopping with a patience of 15 epochs**: if validation loss doesn't improve for 15 epochs in a row, training stops and the best-performing weights seen so far are kept (rather than whatever weights happen to be there when it stops). The best epoch was **24/100** (`train_loss=111.15`, `val_loss=107.08`, `val_RMSE=10.35`); no further improvement followed, so training stopped early at epoch 39, and **the epoch-24 weights were restored as the final model** before evaluating it on the untouched test set.
+- **Test RMSE: 14.16 cycles** (MSE 200.57) on 100 held-out engines never used in training or hyperparameter tuning — predictions are typically off by about 14 cycles from the true remaining life.
+- The model is **most accurate when an engine is close to failure** (true RUL under ~60 cycles), which is exactly the regime where a maintenance decision actually matters. The largest errors occur in the mid-range (RUL ≈ 60–120), where degradation signal is still gradual and harder to pinpoint.
 - **Business impact:** an average error of roughly 14 cycles is a tight enough margin to flag an engine for maintenance well before it becomes an unplanned failure, rather than relying on fixed-interval servicing.
