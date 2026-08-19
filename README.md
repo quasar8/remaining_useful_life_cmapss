@@ -49,7 +49,7 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
   - The RUL target was **capped at 125 cycles** (piecewise-linear target) — EDA showed sensor readings stay essentially flat while an engine has more than ~125 cycles left, so capping lets the model focus on the region where degradation is actually visible.
   - **Sliding windows:** the LSTM needs to see *change* over time, not a single cycle, so each engine's history was cut into overlapping 30-cycle windows, sliding forward one cycle at a time. Each window's target (RUL) is taken at that window's **last cycle** — i.e. "given the last 30 cycles of readings, what is the RUL right now?" Doing this across all 80 training-split engines produced **14,256 training windows** (`X_train` shape `(14256, 30, 14)`, `y_train` shape `(14256,)`).
     
-    <img src="images/sliding_window_diagram.png" alt="Sliding Window Diagram" width="560">
+    <p align="center"><img src="images/sliding_window_diagram.png" alt="Sliding Window Diagram" width="560"></p>
     
     *How the sliding window works: a 30-cycle window slides forward one cycle at a time across an engine's history, with the RUL target read at each window's last cycle. Repeated across all engines, this is what turns raw per-cycle rows into 14,256 training sequences.*
   - **Batching (PyTorch `DataLoader`):** the 14,256 windows are then grouped into random, **shuffled** batches of **64** before being fed to the LSTM — `X_batch` shape `torch.Size([64, 30, 14])`, `y_batch` shape `torch.Size([64])`, where **64** is the number of windows in that batch, **30** is the number of cycles per window, and **14** is the number of sensor/setting features per cycle.
