@@ -121,6 +121,30 @@ Plus 3 operating settings (<code>op_setting_1–3</code>) — only <code>op_sett
 ```
 ## 📈 Visualizations
 
-18. Test Set Evaluation
-19. Streamlit Dashboard
+
+### 1- Justification for RUL = 125
+ 
+![Sensor Degradation Justifying RUL = 125](images/justification_rul_125.png)
+*`SENSOR_12` (NRf) and `SENSOR_4` (P2) plotted against Remaining Useful Life for a sample of engines. Both stay essentially flat while an engine has more than ~125 cycles left (green zone), then trend clearly as it nears failure — the evidence behind capping the RUL target at 125 cycles.*
+ 
+### 2- Degradation Path
+ 
+![Sensor Degradation Path](images/degradation_path.png)
+*`SENSOR_2` (T30) and `SENSOR_3` (T50) — total temperature at the HPC and LPT outlets — climbing steadily as a sample of engines approach failure (RUL decreasing left to right). This kind of steady, monotonic drift is exactly the degradation pattern the LSTM learns to recognize.*
+ 
+### 3- True vs. Predicted RUL
+ 
+![True vs. Predicted RUL (Test Set)](images/true_vs_predicted_rul.png)
+ 
+*Every test engine's true RUL plotted against the model's prediction. The dashed line marks a perfect prediction — points closer to it are more accurate. The model tracks the diagonal closely, especially as engines approach failure.*
+ 
+### 4- Dashboard — Fleet Overview
+ 
+![Streamlit Dashboard — Fleet Overview](images/fleet_overview.png)
+*The dashboard's Fleet Overview page: color-coded table across all 100 engines (Critical / Monitor / Healthy), letting a maintenance team see at a glance which engines need attention first.*
+ 
+### 5- Dashboard — Engine Detail
+ 
+![Streamlit Dashboard — Engine Detail](images/engine_detail.png)
+*The dashboard's Engine Detail page for a single engine: an RUL gauge shows how many cycles are left, and a sensor selector lets an engineer pick any of the 14 sensors and observe how its readings change over that engine's history — with an automatic alert flagging sensors that are trending in a concerning direction.* 
  
